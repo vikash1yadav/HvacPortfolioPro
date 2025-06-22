@@ -241,8 +241,22 @@ export const insertContactSubmissionSchema = createInsertSchema(contactSubmissio
 });
 
 // Types
+// Admin users table for username/password authentication
+export const adminUsers = pgTable("admin_users", {
+  id: serial("id").primaryKey(),
+  username: varchar("username", { length: 50 }).unique().notNull(),
+  passwordHash: varchar("password_hash", { length: 255 }).notNull(),
+  email: varchar("email"),
+  isActive: boolean("is_active").default(true),
+  lastLogin: timestamp("last_login"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
 export type UpsertUser = typeof users.$inferInsert;
 export type User = typeof users.$inferSelect;
+export type AdminUser = typeof adminUsers.$inferSelect;
+export type InsertAdminUser = typeof adminUsers.$inferInsert;
 
 export type InsertCompanyContent = z.infer<typeof insertCompanyContentSchema>;
 export type CompanyContent = typeof companyContent.$inferSelect;

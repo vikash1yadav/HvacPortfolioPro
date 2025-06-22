@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useAuth } from "@/hooks/useAuth";
+import { useAdminAuth } from "@/hooks/useAdminAuth";
 import { useToast } from "@/hooks/use-toast";
 import { isUnauthorizedError } from "@/lib/authUtils";
 import { Button } from "@/components/ui/button";
@@ -14,22 +14,22 @@ import { Link } from "wouter";
 
 export default function AdminDashboard() {
   const { toast } = useToast();
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated: isAdminAuthenticated, isLoading: adminLoading, adminUser } = useAdminAuth();
 
-  // Redirect to home if not authenticated
+  // Redirect to login if not authenticated
   useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
+    if (!adminLoading && !isAdminAuthenticated) {
       toast({
         title: "Unauthorized",
-        description: "You are logged out. Logging in again...",
+        description: "Please log in to access the admin dashboard",
         variant: "destructive",
       });
       setTimeout(() => {
-        window.location.href = "/api/login";
+        window.location.href = "/admin/login";
       }, 500);
       return;
     }
-  }, [isAuthenticated, isLoading, toast]);
+  }, [isAdminAuthenticated, adminLoading, toast]);
 
   // Dashboard statistics
   const { data: portfolioProjects } = useQuery({
@@ -52,7 +52,7 @@ export default function AdminDashboard() {
     retry: false,
   });
 
-  if (isLoading) {
+  if (adminLoading) {
     return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
   }
 

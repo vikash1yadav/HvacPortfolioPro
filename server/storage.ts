@@ -1,5 +1,6 @@
 import {
   users,
+  adminUsers,
   companyContent,
   services,
   portfolioProjects,
@@ -12,6 +13,8 @@ import {
   contactSubmissions,
   type User,
   type UpsertUser,
+  type AdminUser,
+  type InsertAdminUser,
   type CompanyContent,
   type InsertCompanyContent,
   type Service,
@@ -38,6 +41,11 @@ export interface IStorage {
   // User operations (required for Replit Auth)
   getUser(id: string): Promise<User | undefined>;
   upsertUser(user: UpsertUser): Promise<User>;
+
+  // Admin user operations
+  getAdminUserByUsername(username: string): Promise<AdminUser | undefined>;
+  createAdminUser(user: InsertAdminUser): Promise<AdminUser>;
+  updateAdminUserLastLogin(id: number): Promise<void>;
 
   // Company content operations
   getCompanyContent(): Promise<CompanyContent[]>;
@@ -114,6 +122,30 @@ export class DatabaseStorage implements IStorage {
       })
       .returning();
     return user;
+  }
+
+  // Admin user operations
+  async getAdminUserByUsername(username: string): Promise<AdminUser | undefined> {
+    const [user] = await db
+      .select()
+      .from(adminUsers)
+      .where(eq(adminUsers.username, username));
+    return user;
+  }
+
+  async createAdminUser(userData: InsertAdminUser): Promise<AdminUser> {
+    const [user] = await db
+      .insert(adminUsers)
+      .values(userData)
+      .returning();
+    return user;
+  }
+
+  async updateAdminUserLastLogin(id: number): Promise<void> {
+    await db
+      .update(adminUsers)
+      .set({ lastLogin: new Date() })
+      .where(eq(adminUsers.id, id));
   }
 
   // Company content operations

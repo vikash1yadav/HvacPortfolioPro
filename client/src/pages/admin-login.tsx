@@ -1,38 +1,66 @@
-import { useEffect } from "react";
-import { useAuth } from "@/hooks/useAuth";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Loader2, Shield, User, Lock } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Loader2, Shield, User, Lock, Eye, EyeOff } from "lucide-react";
 import { useLocation } from "wouter";
+import { apiRequest } from "@/lib/queryClient";
+import { useToast } from "@/hooks/use-toast";
+
+const loginSchema = z.object({
+  username: z.string().min(1, "Username is required"),
+  password: z.string().min(1, "Password is required"),
+});
+
+type LoginFormData = z.infer<typeof loginSchema>;
 
 export default function AdminLogin() {
-  const { isAuthenticated, isLoading } = useAuth();
+  const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [, setLocation] = useLocation();
+  const { toast } = useToast();
 
-  useEffect(() => {
-    if (!isLoading && isAuthenticated) {
+  const form = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      username: "",
+      password: "",
+    },
+  });
+
+  const onSubmit = async (data: LoginFormData) => {
+    setIsLoading(true);
+    try {
+      const response = await fetch("/api/admin/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        throw new Error("Login failed");
+      }
+
+      toast({
+        title: "Login successful",
+        description: "Welcome to the admin dashboard",
+      });
+
       setLocation("/admin");
+    } catch (error: any) {
+      toast({
+        title: "Login failed",
+        description: "Invalid username or password",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
     }
-  }, [isAuthenticated, isLoading, setLocation]);
-
-  const handleLogin = () => {
-    window.location.href = "/api/login";
   };
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
-        <div className="flex items-center space-x-2">
-          <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
-          <span className="text-lg text-gray-600 dark:text-gray-300">Loading...</span>
-        </div>
-      </div>
-    );
-  }
-
-  if (isAuthenticated) {
-    return null; // Will redirect in useEffect
-  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 p-4">
@@ -43,7 +71,7 @@ export default function AdminLogin() {
           </div>
           <div>
             <CardTitle className="text-2xl font-bold text-gray-900 dark:text-white">
-              Admin Access
+              Admin Login
             </CardTitle>
             <CardDescription className="text-gray-600 dark:text-gray-400 mt-2">
               Sign in to access the Arctic Air Solutions admin dashboard
@@ -51,34 +79,81 @@ export default function AdminLogin() {
           </div>
         </CardHeader>
         
-        <CardContent className="space-y-6">
-          <div className="space-y-4">
-            <div className="flex items-center space-x-3 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-              <User className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-              <span className="text-sm text-blue-800 dark:text-blue-300">
-                Secure authentication required
-              </span>
-            </div>
-            
-            <div className="flex items-center space-x-3 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
-              <Lock className="h-5 w-5 text-green-600 dark:text-green-400" />
-              <span className="text-sm text-green-800 dark:text-green-300">
-                Protected admin area
-              </span>
-            </div>
-          </div>
+        <CardContent>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <FormField
+                control={form.control}
+                name="username"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-gray-700 dark:text-gray-300">Username</FormLabel>
+                    <FormControl>
+                      <div className="relative">
+                        <User className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                        <Input
+                          {...field}
+                          placeholder="Enter your username"
+                          className="pl-10 h-12 bg-white/50 dark:bg-gray-700/50 border-gray-300 dark:border-gray-600"
+                          disabled={isLoading}
+                        />
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-          <Button 
-            onClick={handleLogin}
-            className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white font-medium transition-colors"
-            size="lg"
-          >
-            Sign In to Admin Dashboard
-          </Button>
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-gray-700 dark:text-gray-300">Password</FormLabel>
+                    <FormControl>
+                      <div className="relative">
+                        <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                        <Input
+                          {...field}
+                          type={showPassword ? "text" : "password"}
+                          placeholder="Enter your password"
+                          className="pl-10 pr-10 h-12 bg-white/50 dark:bg-gray-700/50 border-gray-300 dark:border-gray-600"
+                          disabled={isLoading}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword(!showPassword)}
+                          className="absolute right-3 top-3 text-gray-400 hover:text-gray-600"
+                        >
+                          {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                        </button>
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-          <div className="text-center">
+              <Button 
+                type="submit"
+                className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white font-medium transition-colors"
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Signing in...
+                  </>
+                ) : (
+                  "Sign In"
+                )}
+              </Button>
+            </form>
+          </Form>
+
+          <div className="mt-6 text-center">
             <p className="text-xs text-gray-500 dark:text-gray-400">
-              Only authorized personnel can access the admin dashboard
+              Demo credentials: admin / admin123
             </p>
           </div>
         </CardContent>

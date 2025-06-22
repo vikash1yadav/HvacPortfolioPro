@@ -2,6 +2,8 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { setupAuth, isAuthenticated } from "./replitAuth";
+import { loginAdmin, requireAdminAuth, getCurrentAdmin } from "./adminAuth";
+import { z } from "zod";
 import {
   insertCompanyContentSchema,
   insertServiceSchema,
@@ -18,16 +20,45 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Auth middleware
   await setupAuth(app);
 
-  // Auth routes
-  app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
+  // Admin auth routes
+  const loginSchema = z.object({
+    username: z.string().min(1, "Username is required"),
+    password: z.string().min(1, "Password is required"),
+  });
+
+  app.post('/api/admin/login', async (req, res) => {
     try {
-      const userId = req.user.claims.sub;
-      const user = await storage.getUser(userId);
-      res.json(user);
+      const { username, password } = loginSchema.parse(req.body);
+      
+      const adminUser = await loginAdmin(username, password);
+      if (!adminUser) {
+        return res.status(401).json({ message: "Invalid credentials" });
+      }
+
+      req.session.adminUser = {
+        id: adminUser.id,
+        username: adminUser.username,
+        email: adminUser.email || undefined,
+      };
+      res.json({ message: "Login successful", user: adminUser });
     } catch (error) {
-      console.error("Error fetching user:", error);
-      res.status(500).json({ message: "Failed to fetch user" });
+      console.error("Login error:", error);
+      res.status(400).json({ message: "Invalid request" });
     }
+  });
+
+  app.post('/api/admin/logout', (req, res) => {
+    req.session.destroy((err) => {
+      if (err) {
+        return res.status(500).json({ message: "Could not log out" });
+      }
+      res.json({ message: "Logout successful" });
+    });
+  });
+
+  app.get('/api/admin/user', requireAdminAuth, (req, res) => {
+    const adminUser = getCurrentAdmin(req);
+    res.json(adminUser);
   });
 
   // Public API routes (no auth required)
@@ -156,7 +187,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Protected Admin API routes
   
   // Admin company content
-  app.put('/api/admin/company-content', isAuthenticated, async (req, res) => {
+  app.put('/api/admin/company-content', requireAdminAuth, async (req, res) => {
     try {
       const validatedData = insertCompanyContentSchema.parse(req.body);
       const content = await storage.upsertCompanyContent(validatedData);
