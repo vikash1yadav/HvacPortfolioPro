@@ -62,7 +62,7 @@ export default function Navigation() {
             </div>
           </div>
           <div className="hidden md:block">
-            <a href="/api/login">
+            <a href="/admin/login">
               <Button className="bg-brand-blue hover:bg-blue-700">
                 Admin Login
               </Button>
@@ -119,7 +119,7 @@ export default function Navigation() {
             >
               Contact
             </button>
-            <a href="/api/login" className="block mt-2">
+            <a href="/admin/login" className="block mt-2">
               <Button className="w-full bg-brand-blue hover:bg-blue-700">
                 Admin Login
               </Button>
