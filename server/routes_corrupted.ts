@@ -9,9 +9,9 @@ import {
   insertServiceSchema,
   insertPortfolioProjectSchema,
   insertTeamMemberSchema,
-  insertBlogPostSchema,
   insertBlogCategorySchema,
   insertBlogTagSchema,
+  insertBlogPostSchema,
   insertTestimonialSchema,
   insertContactSubmissionSchema,
 } from "@shared/schema";
@@ -20,7 +20,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Auth middleware
   await setupAuth(app);
 
-  // Admin Authentication Routes
+  // Admin auth routes
   const loginSchema = z.object({
     username: z.string().min(1, "Username is required"),
     password: z.string().min(1, "Password is required"),
@@ -29,19 +29,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post('/api/admin/login', async (req, res) => {
     try {
       const { username, password } = loginSchema.parse(req.body);
-      const user = await loginAdmin(username, password);
       
-      if (user) {
-        const sessionUser = {
-          id: user.id,
-          username: user.username,
-          email: user.email || undefined
-        };
-        req.session.adminUser = sessionUser;
-        res.json({ message: "Login successful", user: sessionUser });
-      } else {
-        res.status(401).json({ message: "Invalid credentials" });
+      const adminUser = await loginAdmin(username, password);
+      if (!adminUser) {
+        return res.status(401).json({ message: "Invalid credentials" });
       }
+
+      req.session.adminUser = {
+        id: adminUser.id,
+        username: adminUser.username,
+        email: adminUser.email || undefined,
+      };
+      res.json({ message: "Login successful", user: adminUser });
     } catch (error) {
       console.error("Login error:", error);
       res.status(400).json({ message: "Invalid request" });
@@ -79,33 +78,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { section } = req.params;
       const content = await storage.getCompanyContentBySection(section);
-      
-      if (!content) {
-        // Return default content for hero section
-        if (section === 'hero') {
-          return res.json({
-            section: 'hero',
-            title: 'Arctic Air Solutions',
-            description: 'Professional HVAC services for residential and commercial properties. Expert installation, maintenance, and repair services.',
-            content: null
-          });
-        }
-        // Return default content for about section
-        if (section === 'about') {
-          return res.json({
-            section: 'about',
-            title: 'About Arctic Air Solutions',
-            description: 'With over 15 years of experience in the HVAC industry, Arctic Air Solutions has been serving the community with reliable heating, ventilation, and air conditioning services.',
-            content: 'Our team of certified technicians is committed to providing exceptional service and ensuring your comfort year-round. We specialize in energy-efficient solutions that save you money while keeping your space comfortable.'
-          });
-        }
-        return res.status(404).json({ message: "Content not found" });
-      }
-      
       res.json(content);
     } catch (error) {
-      console.error("Error fetching company content:", error);
-      res.status(500).json({ message: "Failed to fetch company content" });
+      console.error("Error fetching company content section:", error);
+      res.status(500).json({ message: "Failed to fetch company content section" });
     }
   });
 
@@ -125,11 +101,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { category } = req.query;
       let projects;
-      if (category && typeof category === 'string') {
-        projects = await storage.getPortfolioProjectsByCategory(category);
+      
+      if (category && category !== 'all') {
+        projects = await storage.getPortfolioProjectsByCategory(category as string);
       } else {
         projects = await storage.getPublishedPortfolioProjects();
       }
+      
       res.json(projects);
     } catch (error) {
       console.error("Error fetching portfolio:", error);
@@ -159,17 +137,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get('/api/blog/posts/:slug', async (req, res) => {
+  app.get('/api/blog/categories', async (req, res) => {
     try {
-      const { slug } = req.params;
-      const post = await storage.getBlogPostBySlug(slug);
-      if (!post) {
-        return res.status(404).json({ message: "Post not found" });
-      }
-      res.json(post);
+      const categories = await storage.getBlogCategories();
+      res.json(categories);
     } catch (error) {
-      console.error("Error fetching blog post:", error);
-      res.status(500).json({ message: "Failed to fetch blog post" });
+      console.error("Error fetching blog categories:", error);
+      res.status(500).json({ message: "Failed to fetch blog categories" });
+    }
+  });
+
+  app.get('/api/blog/tags', async (req, res) => {
+    try {
+      const tags = await storage.getBlogTags();
+      res.json(tags);
+    } catch (error) {
+      console.error("Error fetching blog tags:", error);
+      res.status(500).json({ message: "Failed to fetch blog tags" });
     }
   });
 
@@ -184,47 +168,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Contact
+  // Contact form submission
   app.post('/api/contact', async (req, res) => {
     try {
       const validatedData = insertContactSubmissionSchema.parse(req.body);
       const submission = await storage.createContactSubmission(validatedData);
-      res.status(201).json({ message: "Contact submission received", id: submission.id });
+      
+      // TODO: Send email notification
+      // You could integrate with a service like SendGrid, Nodemailer, etc.
+      
+      res.status(201).json({ message: "Contact form submitted successfully", id: submission.id });
     } catch (error) {
-      console.error("Error creating contact submission:", error);
+      console.error("Error submitting contact form:", error);
       res.status(400).json({ message: "Failed to submit contact form" });
     }
   });
 
-  // Placeholder image endpoint
-  app.get('/api/placeholder/:width/:height', (req, res) => {
-    const { width, height } = req.params;
-    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
-      <rect width="100%" height="100%" fill="#f3f4f6"/>
-      <text x="50%" y="50%" font-family="Arial, sans-serif" font-size="14" fill="#9ca3af" text-anchor="middle" dy="0.3em">${width}×${height}</text>
-    </svg>`;
-    res.setHeader('Content-Type', 'image/svg+xml');
-    res.send(svg);
-  });
-
-  // Auth routes
-  app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
+  // Protected Admin API routes
+  
+  // Admin company content
+  app.put('/api/admin/company-content', requireAdminAuth, async (req, res) => {
     try {
-      const userId = req.user.claims.sub;
-      const user = await storage.getUser(userId);
-      res.json(user);
-    } catch (error) {
-      console.error("Error fetching user:", error);
-      res.status(500).json({ message: "Failed to fetch user" });
-    }
-  });
-
-  // Admin content management
-  app.put('/api/admin/company-content/:id', requireAdminAuth, async (req, res) => {
-    try {
-      const id = parseInt(req.params.id);
-      const validatedData = insertCompanyContentSchema.partial().parse(req.body);
-      const content = await storage.updateCompanyContent(id, validatedData);
+      const validatedData = insertCompanyContentSchema.parse(req.body);
+      const content = await storage.upsertCompanyContent(validatedData);
       res.json(content);
     } catch (error) {
       console.error("Error updating company content:", error);
@@ -412,7 +378,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post('/api/admin/blog/categories', requireAdminAuth, async (req, res) => {
+  app.post(app.post('/api/admin/blog/categories', requireAdminAuth, async (req, res) => {
     try {
       const validatedData = insertBlogCategorySchema.parse(req.body);
       const category = await storage.createBlogCategory(validatedData);
@@ -423,7 +389,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post('/api/admin/blog/tags', requireAdminAuth, async (req, res) => {
+  app.post(app.post('/api/admin/blog/tags', requireAdminAuth, async (req, res) => {
     try {
       const validatedData = insertBlogTagSchema.parse(req.body);
       const tag = await storage.createBlogTag(validatedData);
@@ -445,7 +411,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post('/api/admin/testimonials', requireAdminAuth, async (req, res) => {
+  app.post(app.post('/api/admin/testimonials', requireAdminAuth, async (req, res) => {
     try {
       const validatedData = insertTestimonialSchema.parse(req.body);
       const testimonial = await storage.createTestimonial(validatedData);
@@ -494,10 +460,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const id = parseInt(req.params.id);
       await storage.markContactSubmissionAsRead(id);
-      res.json({ message: "Marked as read" });
+      res.status(204).send();
     } catch (error) {
-      console.error("Error marking submission as read:", error);
-      res.status(500).json({ message: "Failed to mark as read" });
+      console.error("Error marking contact submission as read:", error);
+      res.status(500).json({ message: "Failed to mark submission as read" });
     }
   });
 

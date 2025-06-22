@@ -56,7 +56,7 @@ export default function AdminDashboard() {
     return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
   }
 
-  if (!isAuthenticated) {
+  if (!isAdminAuthenticated) {
     return null;
   }
 
@@ -94,7 +94,7 @@ export default function AdminDashboard() {
                 </div>
                 <div className="ml-4">
                   <p className="text-sm font-medium text-gray-600">Total Projects</p>
-                  <p className="text-2xl font-semibold text-gray-900">{portfolioProjects?.length || 0}</p>
+                  <p className="text-2xl font-semibold text-gray-900">{Array.isArray(portfolioProjects) ? portfolioProjects.length : 0}</p>
                 </div>
               </div>
             </CardContent>
@@ -108,7 +108,7 @@ export default function AdminDashboard() {
                 </div>
                 <div className="ml-4">
                   <p className="text-sm font-medium text-gray-600">Blog Posts</p>
-                  <p className="text-2xl font-semibold text-gray-900">{blogPosts?.length || 0}</p>
+                  <p className="text-2xl font-semibold text-gray-900">{Array.isArray(blogPosts) ? blogPosts.length : 0}</p>
                 </div>
               </div>
             </CardContent>
@@ -122,7 +122,7 @@ export default function AdminDashboard() {
                 </div>
                 <div className="ml-4">
                   <p className="text-sm font-medium text-gray-600">Team Members</p>
-                  <p className="text-2xl font-semibold text-gray-900">{teamMembers?.length || 0}</p>
+                  <p className="text-2xl font-semibold text-gray-900">{Array.isArray(teamMembers) ? teamMembers.length : 0}</p>
                 </div>
               </div>
             </CardContent>
@@ -136,7 +136,7 @@ export default function AdminDashboard() {
                 </div>
                 <div className="ml-4">
                   <p className="text-sm font-medium text-gray-600">Inquiries</p>
-                  <p className="text-2xl font-semibold text-gray-900">{contactSubmissions?.filter((s: any) => !s.isRead).length || 0}</p>
+                  <p className="text-2xl font-semibold text-gray-900">{Array.isArray(contactSubmissions) ? contactSubmissions.filter((s: any) => !s.isRead).length : 0}</p>
                 </div>
               </div>
             </CardContent>
