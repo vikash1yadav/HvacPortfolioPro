@@ -88,7 +88,7 @@ export default function RichTextEditor({ value, onChange, placeholder }: RichTex
       .replace(/\n/g, '<br />');
 
     // Wrap list items
-    html = html.replace(/(<li>.*<\/li>)/gs, '<ul>$1</ul>');
+    html = html.replace(/(<li>.*<\/li>)/g, '<ul>$1</ul>');
     
     return html;
   };
