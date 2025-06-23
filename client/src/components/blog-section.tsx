@@ -48,11 +48,11 @@ export default function BlogSection() {
   };
 
   return (
-    <section id="blog" className="py-12 sm:py-16 lg:py-20 bg-white">
+    <section id="blog" className="py-12 sm:py-16 lg:py-20 bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-8 sm:mb-12">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">Latest Blog Posts</h2>
-          <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto px-4">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-3 sm:mb-4">Latest Blog Posts</h2>
+          <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto px-4">
             Stay updated with HVAC tips, energy efficiency guides, and industry news.
           </p>
         </div>
@@ -60,18 +60,18 @@ export default function BlogSection() {
         {isLoading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="bg-white rounded-lg shadow-md overflow-hidden animate-pulse">
-                <div className="w-full h-40 sm:h-48 bg-gray-300"></div>
+              <div key={i} className="bg-card rounded-lg shadow-md overflow-hidden animate-pulse border border-border">
+                <div className="w-full h-40 sm:h-48 bg-muted"></div>
                 <div className="p-4 sm:p-6">
                   <div className="flex space-x-2 mb-3">
-                    <div className="h-5 sm:h-6 w-12 sm:w-16 bg-gray-300 rounded-full"></div>
-                    <div className="h-5 sm:h-6 w-16 sm:w-20 bg-gray-300 rounded-full"></div>
+                    <div className="h-5 sm:h-6 w-12 sm:w-16 bg-muted rounded-full"></div>
+                    <div className="h-5 sm:h-6 w-16 sm:w-20 bg-muted rounded-full"></div>
                   </div>
-                  <div className="h-5 sm:h-6 bg-gray-300 rounded mb-3"></div>
-                  <div className="h-4 bg-gray-300 rounded mb-4"></div>
+                  <div className="h-5 sm:h-6 bg-muted rounded mb-3"></div>
+                  <div className="h-4 bg-muted rounded mb-4"></div>
                   <div className="flex justify-between items-center">
-                    <div className="h-4 w-20 sm:w-24 bg-gray-300 rounded"></div>
-                    <div className="h-4 w-12 sm:w-16 bg-gray-300 rounded"></div>
+                    <div className="h-4 w-20 sm:w-24 bg-muted rounded"></div>
+                    <div className="h-4 w-12 sm:w-16 bg-muted rounded"></div>
                   </div>
                 </div>
               </div>
@@ -80,7 +80,7 @@ export default function BlogSection() {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
             {displayPosts.slice(0, 3).map((post, index) => (
-              <article key={post.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow">
+              <article key={post.id} className="bg-card rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow border border-border">
                 <img 
                   src={post.imageUrl || "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&h=400"} 
                   alt={post.title}

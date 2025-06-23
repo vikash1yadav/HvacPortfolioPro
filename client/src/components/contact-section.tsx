@@ -53,11 +53,11 @@ export default function ContactSection() {
   };
 
   return (
-    <section id="contact" className="py-12 sm:py-16 lg:py-20 bg-white">
+    <section id="contact" className="py-12 sm:py-16 lg:py-20 bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-8 sm:mb-12">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">Get In Touch</h2>
-          <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto px-4">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-3 sm:mb-4">Get In Touch</h2>
+          <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto px-4">
             Ready to improve your comfort? Contact us for a free consultation and estimate.
           </p>
         </div>
@@ -66,7 +66,7 @@ export default function ContactSection() {
           {/* Contact Form */}
           <Card>
             <CardContent className="p-4 sm:p-6 lg:p-8">
-              <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-4 sm:mb-6">Send us a message</h3>
+              <h3 className="text-lg sm:text-xl font-semibold text-card-foreground mb-4 sm:mb-6">Send us a message</h3>
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 sm:space-y-6">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
@@ -183,15 +183,15 @@ export default function ContactSection() {
           {/* Contact Info */}
           <div className="space-y-6 sm:space-y-8">
             <div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-6">Contact Information</h3>
+              <h3 className="text-xl font-semibold text-foreground mb-6">Contact Information</h3>
               <div className="space-y-4">
                 <div className="flex items-center">
                   <div className="w-10 h-10 bg-brand-blue rounded-full flex items-center justify-center mr-4">
                     <i className="fas fa-phone text-white"></i>
                   </div>
                   <div>
-                    <p className="font-medium text-gray-900">(555) 123-4567</p>
-                    <p className="text-gray-600">24/7 Emergency Service</p>
+                    <p className="font-medium text-foreground">(555) 123-4567</p>
+                    <p className="text-muted-foreground">24/7 Emergency Service</p>
                   </div>
                 </div>
                 
@@ -200,8 +200,8 @@ export default function ContactSection() {
                     <i className="fas fa-envelope text-white"></i>
                   </div>
                   <div>
-                    <p className="font-medium text-gray-900">info@arcticsolutions.com</p>
-                    <p className="text-gray-600">Get a free estimate</p>
+                    <p className="font-medium text-foreground">info@arcticsolutions.com</p>
+                    <p className="text-muted-foreground">Get a free estimate</p>
                   </div>
                 </div>
                 
@@ -210,16 +210,16 @@ export default function ContactSection() {
                     <i className="fas fa-map-marker-alt text-white"></i>
                   </div>
                   <div>
-                    <p className="font-medium text-gray-900">123 Industrial Blvd</p>
-                    <p className="text-gray-600">Tech City, TC 12345</p>
+                    <p className="font-medium text-foreground">123 Industrial Blvd</p>
+                    <p className="text-muted-foreground">Tech City, TC 12345</p>
                   </div>
                 </div>
               </div>
             </div>
             
             <div>
-              <h4 className="text-lg font-semibold text-gray-900 mb-4">Business Hours</h4>
-              <div className="space-y-2 text-gray-700">
+              <h4 className="text-lg font-semibold text-foreground mb-4">Business Hours</h4>
+              <div className="space-y-2 text-foreground">
                 <div className="flex justify-between">
                   <span>Monday - Friday:</span>
                   <span>8:00 AM - 6:00 PM</span>
@@ -236,7 +236,7 @@ export default function ContactSection() {
             </div>
             
             <div>
-              <h4 className="text-lg font-semibold text-gray-900 mb-4">Follow Us</h4>
+              <h4 className="text-lg font-semibold text-foreground mb-4">Follow Us</h4>
               <div className="flex space-x-4">
                 <button className="w-10 h-10 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors">
                   <i className="fab fa-facebook-f"></i>

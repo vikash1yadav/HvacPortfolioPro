@@ -8,32 +8,32 @@ export default function AboutSection() {
   });
 
   return (
-    <section id="about" className="py-16 bg-white">
+    <section id="about" className="py-16 bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div>
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
               {aboutContent?.title || "About Arctic Air Solutions"}
             </h2>
-            <p className="text-lg text-gray-600 mb-6">
+            <p className="text-lg text-muted-foreground mb-6">
               {aboutContent?.description || "With over 15 years of experience in the HVAC industry, Arctic Air Solutions has built a reputation for exceptional service, reliable installations, and energy-efficient solutions."}
             </p>
             <div className="space-y-4">
               <div className="flex items-center">
                 <i className="fas fa-check-circle text-green-600 mr-3"></i>
-                <span className="text-gray-700">Licensed and insured professionals</span>
+                <span className="text-foreground">Licensed and insured professionals</span>
               </div>
               <div className="flex items-center">
                 <i className="fas fa-check-circle text-green-600 mr-3"></i>
-                <span className="text-gray-700">24/7 emergency service available</span>
+                <span className="text-foreground">24/7 emergency service available</span>
               </div>
               <div className="flex items-center">
                 <i className="fas fa-check-circle text-green-600 mr-3"></i>
-                <span className="text-gray-700">Energy-efficient solutions</span>
+                <span className="text-foreground">Energy-efficient solutions</span>
               </div>
               <div className="flex items-center">
                 <i className="fas fa-check-circle text-green-600 mr-3"></i>
-                <span className="text-gray-700">Satisfaction guarantee</span>
+                <span className="text-foreground">Satisfaction guarantee</span>
               </div>
             </div>
           </div>

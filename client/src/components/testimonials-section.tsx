@@ -47,11 +47,11 @@ export default function TestimonialsSection() {
   };
 
   return (
-    <section className="py-16 bg-brand-light">
+    <section className="py-16 bg-muted/30">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">What Our Customers Say</h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">What Our Customers Say</h2>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Read testimonials from satisfied customers who trust Arctic Air Solutions.
           </p>
         </div>
@@ -59,18 +59,18 @@ export default function TestimonialsSection() {
         {isLoading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="bg-white rounded-lg shadow-md p-6 animate-pulse">
+              <div key={i} className="bg-card rounded-lg shadow-md p-6 animate-pulse border border-border">
                 <div className="flex space-x-1 mb-4">
                   {[1, 2, 3, 4, 5].map((star) => (
-                    <div key={star} className="w-4 h-4 bg-gray-300 rounded"></div>
+                    <div key={star} className="w-4 h-4 bg-muted rounded"></div>
                   ))}
                 </div>
-                <div className="h-20 bg-gray-300 rounded mb-4"></div>
+                <div className="h-20 bg-muted rounded mb-4"></div>
                 <div className="flex items-center">
-                  <div className="w-12 h-12 bg-gray-300 rounded-full mr-4"></div>
+                  <div className="w-12 h-12 bg-muted rounded-full mr-4"></div>
                   <div>
-                    <div className="h-4 w-24 bg-gray-300 rounded mb-1"></div>
-                    <div className="h-3 w-16 bg-gray-300 rounded"></div>
+                    <div className="h-4 w-24 bg-muted rounded mb-1"></div>
+                    <div className="h-3 w-16 bg-muted rounded"></div>
                   </div>
                 </div>
               </div>
@@ -79,11 +79,11 @@ export default function TestimonialsSection() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {displayTestimonials.map((testimonial) => (
-              <div key={testimonial.id} className="bg-white rounded-lg shadow-md p-6">
+              <div key={testimonial.id} className="bg-card rounded-lg shadow-md p-6 border border-border">
                 <div className="flex items-center mb-4">
                   {renderStars(testimonial.rating || 5)}
                 </div>
-                <blockquote className="text-gray-700 mb-4">"{testimonial.content}"</blockquote>
+                <blockquote className="text-card-foreground mb-4">"{testimonial.content}"</blockquote>
                 <div className="flex items-center">
                   <img 
                     src={testimonial.customerImageUrl || "https://images.unsplash.com/photo-1494790108755-2616b332e234?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=100&h=100"} 
@@ -91,8 +91,8 @@ export default function TestimonialsSection() {
                     className="w-12 h-12 rounded-full object-cover mr-4"
                   />
                   <div>
-                    <p className="font-semibold text-gray-900">{testimonial.customerName}</p>
-                    <p className="text-sm text-gray-600">{testimonial.customerTitle}</p>
+                    <p className="font-semibold text-card-foreground">{testimonial.customerName}</p>
+                    <p className="text-sm text-muted-foreground">{testimonial.customerTitle}</p>
                   </div>
                 </div>
               </div>
