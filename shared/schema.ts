@@ -238,6 +238,10 @@ export const insertTestimonialSchema = createInsertSchema(testimonials).omit({
 export const insertContactSubmissionSchema = createInsertSchema(contactSubmissions).omit({
   id: true,
   createdAt: true,
+}).extend({
+  phone: z.string().optional(),
+  serviceNeeded: z.string().optional(),
+  message: z.string().optional(),
 });
 
 // Types

@@ -22,9 +22,9 @@ export default function ContactSection() {
       firstName: "",
       lastName: "",
       email: "",
-      phone: "",
-      serviceNeeded: "",
-      message: "",
+      phone: undefined,
+      serviceNeeded: undefined,
+      message: undefined,
     },
   });
 
@@ -53,23 +53,23 @@ export default function ContactSection() {
   };
 
   return (
-    <section id="contact" className="py-16 bg-white">
+    <section id="contact" className="py-12 sm:py-16 lg:py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Get In Touch</h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+        <div className="text-center mb-8 sm:mb-12">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">Get In Touch</h2>
+          <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto px-4">
             Ready to improve your comfort? Contact us for a free consultation and estimate.
           </p>
         </div>
         
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
           {/* Contact Form */}
           <Card>
-            <CardContent className="p-8">
-              <h3 className="text-xl font-semibold text-gray-900 mb-6">Send us a message</h3>
+            <CardContent className="p-4 sm:p-6 lg:p-8">
+              <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-4 sm:mb-6">Send us a message</h3>
               <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 sm:space-y-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                     <FormField
                       control={form.control}
                       name="firstName"
@@ -170,7 +170,7 @@ export default function ContactSection() {
                   
                   <Button 
                     type="submit" 
-                    className="w-full bg-brand-blue hover:bg-blue-700"
+                    className="w-full bg-brand-blue hover:bg-blue-700 text-sm sm:text-base py-2 sm:py-3"
                     disabled={submitContactForm.isPending}
                   >
                     {submitContactForm.isPending ? "Sending..." : "Send Message"}
@@ -181,7 +181,7 @@ export default function ContactSection() {
           </Card>
           
           {/* Contact Info */}
-          <div className="space-y-8">
+          <div className="space-y-6 sm:space-y-8">
             <div>
               <h3 className="text-xl font-semibold text-gray-900 mb-6">Contact Information</h3>
               <div className="space-y-4">

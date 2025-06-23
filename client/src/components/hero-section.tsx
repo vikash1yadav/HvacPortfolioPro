@@ -33,25 +33,25 @@ export default function HeroSection() {
       }}
     >
       <div className="absolute inset-0 bg-black bg-opacity-40"></div>
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 md:py-32">
         <div className="text-center">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 leading-tight">
             {heroContent?.title || "Professional HVAC Solutions"}
           </h1>
-          <p className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto">
+          <p className="text-lg sm:text-xl md:text-2xl mb-6 sm:mb-8 max-w-3xl mx-auto leading-relaxed">
             {heroContent?.description || "Expert heating, ventilation, and air conditioning services for residential and commercial properties. Energy-efficient solutions you can trust."}
           </p>
-          <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-6">
             <Button 
               onClick={scrollToContact}
-              className="bg-brand-orange hover:bg-yellow-600 text-white font-semibold py-3 px-8"
+              className="bg-brand-orange hover:bg-yellow-600 text-white font-semibold py-3 px-6 sm:px-8 text-base sm:text-lg w-full sm:w-auto"
             >
               Get Free Estimate
             </Button>
             <Button 
               onClick={scrollToPortfolio}
               variant="outline"
-              className="border-2 border-white text-white hover:bg-white hover:text-brand-blue font-semibold py-3 px-8"
+              className="border-2 border-white text-white hover:bg-white hover:text-brand-blue font-semibold py-3 px-6 sm:px-8 text-base sm:text-lg w-full sm:w-auto"
             >
               View Our Work
             </Button>
