@@ -90,24 +90,24 @@ export default function BlogSection() {
                   <div className="flex space-x-2 mb-3">
                     {index === 0 && (
                       <>
-                        <Badge className="bg-blue-100 text-brand-blue">HVAC</Badge>
-                        <Badge className="bg-green-100 text-green-700">Energy Efficiency</Badge>
+                        <Badge className="bg-blue-100 text-brand-blue dark:bg-blue-900/30 dark:text-blue-400">HVAC</Badge>
+                        <Badge className="bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">Energy Efficiency</Badge>
                       </>
                     )}
                     {index === 1 && (
-                      <Badge className="bg-orange-100 text-brand-orange">Maintenance</Badge>
+                      <Badge className="bg-orange-100 text-brand-orange dark:bg-orange-900/30 dark:text-orange-400">Maintenance</Badge>
                     )}
                     {index === 2 && (
-                      <Badge className="bg-purple-100 text-purple-700">Smart Home</Badge>
+                      <Badge className="bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400">Smart Home</Badge>
                     )}
                   </div>
-                  <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-3">{post.title}</h3>
-                  <p className="text-sm sm:text-base text-gray-600 mb-4">{post.excerpt}</p>
+                  <h3 className="text-lg sm:text-xl font-semibold text-card-foreground mb-3">{post.title}</h3>
+                  <p className="text-sm sm:text-base text-muted-foreground mb-4">{post.excerpt}</p>
                   <div className="flex justify-between items-center">
-                    <span className="text-xs sm:text-sm text-gray-500">
+                    <span className="text-xs sm:text-sm text-muted-foreground">
                       {formatDate(post.publishedAt)}
                     </span>
-                    <button className="text-sm sm:text-base text-brand-blue hover:text-blue-700 font-medium">Read More</button>
+                    <button className="text-sm sm:text-base text-brand-blue hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-medium">Read More</button>
                   </div>
                 </div>
               </article>

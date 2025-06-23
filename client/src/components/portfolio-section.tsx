@@ -131,7 +131,7 @@ export default function PortfolioSection() {
                     <Badge className={getCategoryBadgeColor(project.category)}>
                       {project.category.charAt(0).toUpperCase() + project.category.slice(1)}
                     </Badge>
-                    <button className="text-brand-blue hover:text-blue-700 font-medium">View Details</button>
+                    <button className="text-brand-blue hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-medium">View Details</button>
                   </div>
                 </div>
               </div>
